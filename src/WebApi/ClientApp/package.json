@@ -1,6 +1,6 @@
 {
-  "name": "webapp",
-  "version": "0.0.0",
+  "name": "hackers-homeauto",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,8 @@
     "build:ssr": "ng run WebApp:server:dev",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "mock": "nodemon mock/server.js"
   },
   "private": true,
   "dependencies": {
@@ -40,13 +41,16 @@
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "~12.11.6",
     "codelyzer": "^5.2.0",
+    "express": "^4.17.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
+    "json-server": "^0.16.3",
     "karma": "^5.0.2",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage-istanbul-reporter": "~2.1.0",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
+    "nodemon": "^2.0.7",
     "typescript": "3.5.3"
   },
   "optionalDependencies": {
