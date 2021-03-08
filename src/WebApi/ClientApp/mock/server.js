@@ -4,14 +4,13 @@ const middlewares = jsonServer.defaults();
 const port = 3000;
 
 server.use(middlewares);
-server.use(jsonServer.bodyParser);
-
 server.listen(port, () => {
-  console.log('JSON server is running');
+  console.log('JSON Server is running on port ', port);
 });
 
-server.get('/api/nodes', ({query, body}, res) => {
+server.get('/api/nodes', ({ query, body }, res) => {
   console.log('query: ', query);
   console.log('body: ', body);
+
   res.send('Hello World!');
 });
