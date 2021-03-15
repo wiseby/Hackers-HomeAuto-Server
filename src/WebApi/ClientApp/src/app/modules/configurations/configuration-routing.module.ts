@@ -5,8 +5,8 @@ import { NodeDetailsComponent } from "./components/node-details/node-details.com
 
 // Register routes and there behaviours:
 const routes: Routes = [
-  { path: 'configurations', component: ConfLayoutComponent },
-  { path: 'configurations/:guid', component: NodeDetailsComponent },
+  { path: 'configurations', component: ConfLayoutComponent, pathMatch: 'full' },
+  { path: 'configurations/:guid', component: NodeDetailsComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -14,7 +14,8 @@ const routes: Routes = [
   declarations: [ ],
   // Modules imported and consumed by app:
   imports: [ RouterModule.forChild(routes) ],
-  // Dependencies to inject:
-  providers: [],
+  exports: [
+    RouterModule
+  ],
 })
 export class ConfigurationRoutingModule {}
