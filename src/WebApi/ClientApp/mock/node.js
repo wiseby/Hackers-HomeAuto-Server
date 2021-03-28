@@ -1,5 +1,5 @@
 const getRandomTemp = (celcius) => {
-  celcius + (Math.ceil(Math.random() * 10) * 0.1)
+  return celcius + (Math.ceil(Math.random() * 10) * 0.1)
 }
 
 const getRandomHumidity = (humidity, range) => {
@@ -11,7 +11,7 @@ const getRandomHumidity = (humidity, range) => {
   return humidity - (Math.ceil(Math.random() * (100 / range)));
 }
 
-const nodes = [
+const nodes = () => [
   {
     id: 'be4ac492-7d38-48e6-a088-3ccbc96c8570',
     location: 1,
@@ -164,6 +164,6 @@ const locations = [
 ];
 
 module.exports = {
-  nodes: () => nodes,
+  nodes: () => nodes(),
   locations: () => locations,
 }

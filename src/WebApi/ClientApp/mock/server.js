@@ -1,4 +1,6 @@
 const jsonServer = require('json-server');
+
+const node = require('./node');
 const server = jsonServer.create();
 const middlewares = jsonServer.defaults();
 const port = 3000;
@@ -12,5 +14,5 @@ server.get('/api/nodes', ({ query, body }, res) => {
   console.log('query: ', query);
   console.log('body: ', body);
 
-  res.send('Hello World!');
+  res.json(node.nodes());
 });
