@@ -5,11 +5,11 @@ import { NotFoundComponent } from './shared/notfound/notfound.component';
 
 const routes: Routes = [
   { path: '', component: ContainerComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

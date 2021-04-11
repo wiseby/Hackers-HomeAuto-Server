@@ -7,10 +7,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { RoomsightModule } from './roomsight/roomsight.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent
-  ],
+  declarations: [AppComponent, NavbarComponent],
   imports: [
     ConfigurationModule,
     RoomsightModule,
@@ -18,6 +15,6 @@ import { RoomsightModule } from './roomsight/roomsight.module';
     BrowserModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

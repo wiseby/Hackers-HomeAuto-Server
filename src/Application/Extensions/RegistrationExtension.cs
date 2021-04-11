@@ -18,7 +18,7 @@ namespace Application.Extensions
                 return t => c.Resolve(t);
             });
 
-            builder.RegisterAssemblyTypes(typeof(Application).GetTypeInfo().Assembly)
+            // builder.RegisterAssemblyTypes(typeof(Application).GetTypeInfo().Assembly);
         }
     }
 }
