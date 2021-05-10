@@ -9,6 +9,24 @@ The Hackers-HomeAuto is in short a simple home-automation system capable of moni
 
 I'm also trying to make this project as a base template, implementing best practices and concepts that is relevant in the early stages when learning to write software. It should be easy to contribute and expand, tailored to fit any home-automation need.
 
+---
+
+## Structure
+
+### WebApi
+
+ASP.NET Webapi with Angular Client application at it's root.
+
+Mediator pattern with [MediatR](https://github.com/alsami/MediatR.Extensions.Autofac.DependencyInjection)
+
+### MQTT Broker
+
+For connecting IoT devices that uses MQTT for topic publishing.
+
+[MQTTnet](https://github.com/chkr1011/MQTTnet) as a Broker/Server to manage IoT devices.
+
+---
+
 ## HowTo
 
 Install [.Net SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) or later
@@ -48,6 +66,8 @@ The MQTT Server uses [MQTTNet](https://github.com/chkr1011/MQTTnet/blob/master/R
 
 Accessing WebApp at WebApi root on https://localhost:5001/
 
+---
+
 ## Development Workflow
 
 Install [VS Code IDE](https://code.visualstudio.com/) (either stable or insiders) along with these extensions:
@@ -58,6 +78,8 @@ Install [VS Code IDE](https://code.visualstudio.com/) (either stable or insiders
 To test and debug the application you need to install [.Net SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) or later
 
 The client application is a Angular project in /src/WebApi/ClientApp. Further instructions can be located as a README in that folder.
+
+---
 
 ## Contribute
 

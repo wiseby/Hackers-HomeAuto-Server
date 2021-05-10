@@ -1,6 +1,11 @@
 {
   "extends": "tslint:recommended",
   "rulesDirectory": ["codelyzer"],
+  "linterOptions": {
+    "exclude": [
+      "mock/*"
+    ]
+  },
   "rules": {
     "align": {
       "options": ["parameters", "statements"]

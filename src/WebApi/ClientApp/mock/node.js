@@ -1,5 +1,5 @@
 const getRandomTemp = (celcius) => {
-  celcius + Math.ceil(Math.random() * 10) * 0.1;
+  return celcius + Math.ceil(Math.random() * 10) * 0.1;
 };
 
 const getRandomHumidity = (humidity, range) => {
@@ -11,10 +11,10 @@ const getRandomHumidity = (humidity, range) => {
   return humidity - Math.ceil(Math.random() * (100 / range));
 };
 
-const nodes = [
+const nodes = () => [
   {
-    id: 'be4ac492-7d38-48e6-a088-3ccbc96c8570',
-    location: 1,
+    id: 'livingRoomTempSensor',
+    location: 'livingroom',
     readings: [
       {
         device: 'temperature',
@@ -29,8 +29,8 @@ const nodes = [
     ],
   },
   {
-    id: '5b7ac0f9-35e5-4fc0-bc1e-60311e573d3f',
-    location: 4,
+    id: 'kitchenTempSensor',
+    location: 'kitchen',
     readings: [
       {
         device: 'temperature',
@@ -40,24 +40,19 @@ const nodes = [
     ],
   },
   {
-    id: '24958885-de5a-4b10-beae-a910a1f90316',
-    location: 3,
+    id: 'dininigroomWindow',
+    location: 'diningroom',
     readings: [
       {
         device: 'temperature',
         dataType: 'celcius',
         value: 22.1,
       },
-      {
-        device: 'video',
-        dataType: 'binary-stream',
-        value: 1,
-      },
     ],
   },
   {
-    id: 'b048df7d-c771-4d5a-9180-ae1c9e936f79',
-    location: 3,
+    id: 'diningroomCeiling',
+    location: 'diningroom',
     readings: [
       {
         device: 'temperature',
@@ -67,24 +62,19 @@ const nodes = [
     ],
   },
   {
-    id: 'bf1c0496-2bfd-470b-bc94-dc77419f694f',
-    location: 5,
+    id: 'officeTempSensor',
+    location: 'office',
     readings: [
       {
         device: 'temperature',
         dataType: 'celcius',
         value: getRandomTemp(23),
       },
-      {
-        device: 'video',
-        dataType: 'binary-stream',
-        value: 1,
-      },
     ],
   },
   {
-    id: '644b6f02-dec4-40da-9dba-514494295a42',
-    location: 6,
+    id: 'garageDHT',
+    location: 'garage',
     readings: [
       {
         device: 'temperature',
@@ -92,15 +82,15 @@ const nodes = [
         value: getRandomTemp(16),
       },
       {
-        device: 'video',
-        dataType: 'binary-stream',
-        value: 1,
+        device: 'humidity',
+        dataType: 'percent',
+        value: getRandomHumidity(65),
       },
     ],
   },
   {
-    id: '3f2cdc2f-f26c-4f48-8b93-e1c315c18f21',
-    location: 7,
+    id: 'workshopDHT',
+    location: 'workshop',
     readings: [
       {
         device: 'temperature',
@@ -115,8 +105,8 @@ const nodes = [
     ],
   },
   {
-    id: 'd8054d6c-fec9-4712-a4cc-d173de11cadc',
-    location: 8,
+    id: 'bedroomDHT',
+    location: 'bedroom',
     readings: [
       {
         device: 'temperature',
@@ -132,7 +122,23 @@ const nodes = [
   },
 ];
 
-const locations = [
+const pendingNodes = () => [
+  {
+    id: 'hallwayEntranceDht',
+    values: [
+      {
+        name: 'temperature',
+        value: getRandomTemp(18),
+      },
+      {
+        name: 'humidity',
+        value: getRandomHumidity(45),
+      },
+    ],
+  },
+];
+
+const locations = () => [
   {
     id: 1,
     name: 'livingroom',
@@ -150,20 +156,21 @@ const locations = [
     name: 'office',
   },
   {
-    id: 6,
+    id: 5,
     name: 'garage',
   },
   {
-    id: 7,
+    id: 6,
     name: 'workshop',
   },
   {
-    id: 8,
+    id: 7,
     name: 'bedroom',
   },
 ];
 
 module.exports = {
-  nodes: () => nodes,
+  nodes: () => nodes(),
   locations: () => locations,
+  pendingNodes: () => pendingNodes,
 };
