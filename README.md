@@ -11,7 +11,20 @@ I'm also trying to make this project as a base template, implementing best pract
 
 ## HowTo
 
-Install .NET SDK 5.0 or later:
+Install [.Net SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) or later
+
+Install [Docker Engine for Ubuntu/Debian](https://docs.docker.com/engine/install/debian/), [Docker for Windows](https://docs.docker.com/docker-for-windows/install/) or [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
+This is to run the MongoDB in docker container. The hole environment should have a dev-environment in docker in the future.
+
+To start the MongoDB container, while standing in the root directory (where the docker-compose.yml is located) run the following command:
+
+```bash
+docker-compose up -d
+```
+
+_For linux users maybe sudo is required_
+
+_More details can be found in the docker-compose.yml file_
 
 Clone the repo:
 
