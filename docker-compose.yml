@@ -1,10 +1,9 @@
 # Use root/example as user/password credentials
-# Run docker stack deploy -c stack.yml mongo (or docker-compose -f stack.yml up), 
+# Run docker stack deploy -c docker-compose.yml mongo (or docker-compose up),
 # wait for it to initialize completely, and visit http://swarm-ip:8081, http://localhost:8081, or http://host-ip:8081 (as appropriate).
-version: '3.1'
+version: "3.1"
 
 services:
-
   mongo:
     image: mongo
     restart: always
