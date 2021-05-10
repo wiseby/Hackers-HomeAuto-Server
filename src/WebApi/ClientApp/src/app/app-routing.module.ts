@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeLayoutComponent } from './modules/common/main/layout/home-layout.component';
-import { NotFoundComponent } from './modules/common/notfound/notfound.component';
+import { ContainerComponent } from '@roomsight/container/container.component';
+import { NotFoundComponent } from './shared/notfound/notfound.component';
 
 const routes: Routes = [
-  { path: '', component: HomeLayoutComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '', component: ContainerComponent },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

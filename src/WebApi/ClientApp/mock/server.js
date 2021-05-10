@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const jsonServer = require('json-server');
-
 const node = require('./node');
+
 const server = jsonServer.create();
 const middlewares = jsonServer.defaults();
 const port = 3000;
