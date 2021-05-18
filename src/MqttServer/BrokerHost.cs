@@ -1,5 +1,6 @@
 using System;
 using Application.Extensions;
+using Application.MqttContextHandler;
 using Autofac;
 using DataAccess;
 using MQTTnet;
@@ -10,7 +11,7 @@ using Serilog;
 namespace MqttServer
 {
     public static class BrokerHost
-    { 
+    {
         private static MessageInterceptor interceptor;
         private static IMqttServer mqttServer;
         public static IContainer Container;
@@ -40,6 +41,7 @@ namespace MqttServer
             var builder = new ContainerBuilder();
 
             builder.Register(c => new MqttLogger("./logs/MqttServer.log")).As<ILogger>();
+            builder.RegisterType<MqttContextHandler>().As<IMqttContextHandler>();
             builder.RegisterType<MessageInterceptor>().AsSelf();
 
             // Get configuration snapshot
@@ -61,7 +63,7 @@ namespace MqttServer
                 mqttServer.StopAsync().Wait();
                 return 0;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Error("Unhandled Exception accured.");
                 Log.Error(e.Message);
