@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace DataAccess 
+namespace DataAccess
 {
     public interface IMongoConnection
     {
