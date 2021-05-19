@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Application.Models;
 using DataAccess;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -20,7 +21,7 @@ namespace Application.MqttContextHandler
             this.database = "hha_dev";
         }
 
-        public async Task SaveContext(ContextModel context)
+        public async Task SaveContext(Context context)
         {
             if (!(await IsConfigured(context.ClientId)))
             {
@@ -39,7 +40,7 @@ namespace Application.MqttContextHandler
             return result != null;
         }
 
-        private async Task SavePendingNode(ContextModel context)
+        private async Task SavePendingNode(Context context)
         {
             var database = mongoClient.GetDatabase(this.database);
             var collection = database.GetCollection<Node>("Nodes");
@@ -59,7 +60,7 @@ namespace Application.MqttContextHandler
             }
         }
 
-        private Task SaveReading(ContextModel context)
+        private Task SaveReading(Context context)
         {
             var database = mongoClient.GetDatabase(this.database);
             var collection = database.GetCollection<Reading>("Readings");
