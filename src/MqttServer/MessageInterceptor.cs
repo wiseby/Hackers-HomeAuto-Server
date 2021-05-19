@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using Application.Models;
 using Application.MqttContextHandler;
 using MQTTnet.Server;
 using Serilog;
@@ -31,7 +32,7 @@ namespace MqttServer
         {
             try
             {
-                var context = new ContextModel()
+                var context = new Context()
                 {
                     ClientId = interceptContext.ClientId,
                     Topic = interceptContext.ApplicationMessage.Topic,

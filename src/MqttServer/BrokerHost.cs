@@ -1,5 +1,6 @@
 using System;
 using Application.Extensions;
+using Application.Models;
 using Application.MqttContextHandler;
 using Autofac;
 using DataAccess;
@@ -46,11 +47,10 @@ namespace MqttServer
 
             // Get configuration snapshot
 
-            builder.Register<MongoConnection>(c => new MongoConnection("mongodb://root:example@localhost:27017"))
-                .AsSelf()
-                .SingleInstance();
+            var options = new AppOptions();
+            options.ConnectionString = "mongodb://root:example@localhost:27017";
 
-            DependencyRegistration.Register(builder);
+            DependencyRegistration.Register(builder, options);
 
             Container = builder.Build();
         }
