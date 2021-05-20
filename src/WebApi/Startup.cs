@@ -1,6 +1,8 @@
 using Application.Extensions;
+using Application.Mappings;
 using Application.Models;
 using Autofac;
+using AutoMapper.Contrib.Autofac.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -53,6 +55,7 @@ namespace WebApi
             // call builder.Populate(), that happens in AutofacServiceProviderFactory
             // for you.
             var config = Configuration.GetSection(AppOptions.Position).Get<AppOptions>();
+            builder.RegisterAutoMapper(typeof(NodeProfile).Assembly);
             DependencyRegistration.Register(builder, config);
         }
 
