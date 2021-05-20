@@ -1,24 +1,24 @@
+using Application.Models;
+using Application.Repositries;
 using Autofac;
-using MediatR;
+using DataAccess;
 
 namespace Application.Extensions
 {
     public static class DependencyRegistration
     {
         // Register all dependencies here:
-        public static void Register(this ContainerBuilder builder)
+        public static void Register(this ContainerBuilder builder, AppOptions configuration)
         {
-            builder.RegisterType<Mediator>()
-                .As<IMediator>()
-                .InstancePerLifetimeScope();
+            builder.Register<AppOptions>(
+                c => configuration).AsSelf().SingleInstance();
+            builder.Register<MongoConnection>(
+                c => new MongoConnection(configuration.ConnectionString))
+                .As<IMongoConnection>()
+                .SingleInstance();
 
-            builder.Register<ServiceFactory>(context =>
-            {
-                var c = context.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-
-            // builder.RegisterAssemblyTypes(typeof(Application).GetTypeInfo().Assembly);
+            builder.RegisterType<NodeRepository>().As<INodeRepository>();
+            builder.RegisterType<ReadingRepository>().As<IReadingRepository>();
         }
     }
 }
