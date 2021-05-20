@@ -15,5 +15,23 @@ server.get('/api/nodes', ({ query, body }, res) => {
   console.log('query: ', query);
   console.log('body: ', body);
 
-  res.json(node.nodes());
+  const data = {
+    data: node.nodes(),
+  };
+
+  res.json(data);
+});
+
+server.get('/api/nodes/:clientId', ({ query, body, params }, res) => {
+  console.log('query: ', query);
+  console.log('body: ', body);
+  console.log('params: ', params);
+
+  const data = {
+    data: node
+      .nodesWithReadings()
+      .filter((node) => node.id === params['clientId']),
+  };
+
+  res.json(data);
 });
