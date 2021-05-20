@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently -k \"nodemon ./mock/server.js\" \"ng serve\"",
     "build": "ng build",
     "test": "ng test",
     "lint": "tsc --noEmit && eslint . --ext js,ts,json --quiet --fix",
@@ -26,13 +26,14 @@
     "zone.js": "~0.11.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.3",
+    "@angular-devkit/build-angular": "^0.901.15",
     "@angular/cli": "~11.2.3",
     "@angular/compiler-cli": "~11.2.4",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "codelyzer": "^6.0.0",
+    "concurrently": "^6.1.0",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
