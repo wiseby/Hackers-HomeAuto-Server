@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using Application.Models;
 using Application.MqttContextHandler;
 using FakeItEasy;
 using MQTTnet;
@@ -25,7 +26,7 @@ namespace Tests
         public void Server_should_intercept_and_save_topics_with_any_clientId()
         {
             // Arrange
-            var expectedContext = new ContextModel()
+            var expectedContext = new Context()
             {
                 ClientId = "123",
                 Topic = "hha-server",
@@ -47,7 +48,7 @@ namespace Tests
 
             // Assert
             A.CallTo(() => handlerFake.SaveContext(
-                A<ContextModel>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
+                A<Context>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -55,7 +56,7 @@ namespace Tests
         public void Message_with_topic_hha_server_should_be_intercepted()
         {
             // Arrange
-            var expectedContext = new ContextModel()
+            var expectedContext = new Context()
             {
                 ClientId = "123",
                 Topic = "hha-server",
@@ -77,7 +78,7 @@ namespace Tests
 
             // Assert
             A.CallTo(() => handlerFake.SaveContext(
-                A<ContextModel>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
+                A<Context>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -85,7 +86,7 @@ namespace Tests
         public void Message_with_topic_other_then_hha_server_should_not_be_intercepted()
         {
             // Arrange
-            var expectedContext = new ContextModel()
+            var expectedContext = new Context()
             {
                 ClientId = "123",
                 Topic = "other-random-topic",
@@ -108,7 +109,7 @@ namespace Tests
 
             // Assert
             A.CallTo(() => handlerFake.SaveContext(
-                A<ContextModel>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
+                A<Context>.That.Matches((context) => DoesContextMatch(context, expectedContext))))
                 .MustNotHaveHappened();
         }
 
@@ -139,7 +140,7 @@ namespace Tests
             return context;
         }
 
-        private bool DoesContextMatch(ContextModel context, ContextModel expectedContext)
+        private bool DoesContextMatch(Context context, Context expectedContext)
         {
             if (context.ClientId == expectedContext.ClientId &&
                 context.Topic == expectedContext.Topic &&
