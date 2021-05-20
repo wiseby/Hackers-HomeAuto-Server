@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     [Produces("application/vnd.api+json")]
     public class NodesController : ControllerBase
     {
