@@ -18,7 +18,7 @@ const getRandomDateTime = (start, end, startHour, endHour) => {
   return date;
 };
 
-const generateNode = (
+const generateNodeWithReadings = (
   id,
   location,
   isConfigured,
@@ -29,17 +29,19 @@ const generateNode = (
   endDate,
 ) => {
   let node = {
-    id: id,
+    clientId: id,
     isConfigured: isConfigured,
     location: location,
     readingDefinitions: [
       {
         name: 'temperature',
         dataType: 'celcius',
+        icon: 'Temperature',
       },
       {
         name: 'humidity',
         dataType: 'percent',
+        icon: 'Humidity',
       },
     ],
     readings: [],
@@ -48,13 +50,17 @@ const generateNode = (
   for (let i = 0; i < readingsLenth; i++) {
     let reading = {
       values: {
-        temperature: getRandomTemp(temperature),
-        humidity: getRandomHumidity(humidity.percent, humidity.interval),
+        temperature: getRandomTemp(temperature).toString(),
+        humidity: getRandomHumidity(
+          humidity.percent,
+          humidity.interval,
+        ).toString(),
       },
       createdAt: getRandomDateTime(startDate, endDate, 0, 23),
     };
     node.readings.push(reading);
   }
+  console.log('Generated Node: ', node);
   return node;
 };
 
@@ -62,60 +68,163 @@ const readingDefDefault = [
   {
     name: 'temperature',
     dataType: 'celcius',
-    icon: 'temp',
+    icon: 'Temperature',
   },
   {
     name: 'humidity',
     dataType: 'percent',
-    icon: 'percent',
+    icon: 'Humidity',
+  },
+  {
+    name: 'doorStatus',
+    dataType: 'onoff',
+    icon: 'OpenClose',
   },
 ];
 
 const nodes = () => [
   {
-    id: 'livingRoomTempSensor',
+    clientId: 'livingRoomTempSensor',
     location: 'livingroom',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'kitchenTempSensor',
+    clientId: 'kitchenTempSensor',
     location: 'kitchen',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'dininigroomWindow',
+    clientId: 'dininigroomWindow',
     location: 'diningroom',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'diningroomCeiling',
+    clientId: 'diningroomCeiling',
     location: 'diningroom',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'officeTempSensor',
+    clientId: 'officeTempSensor',
     location: 'office',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'garageDHT',
+    clientId: 'garageDHT',
     location: 'garage',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'workshopDHT',
+    clientId: 'workshopDHT',
     location: 'workshop',
     readingDefinitions: readingDefDefault,
   },
   {
-    id: 'bedroomDHT',
+    clientId: 'bedroomDHT',
     location: 'bedroom',
     readingDefinitions: readingDefDefault,
   },
 ];
 
+const nodesWithSingleReading = () => [
+  generateNodeWithReadings(
+    'HallwayDHT',
+    'MainHallWay',
+    false,
+    1,
+    { percent: 67, interval: 5 },
+    19,
+    new Date(),
+    new Date('2021/03/15'),
+  ),
+  generateNodeWithReadings(
+    'kitchenTempSensor',
+    'kitchen',
+    false,
+    1,
+    { percent: 70, interval: 10 },
+    21,
+    new Date(),
+    new Date('2021/02/01'),
+  ),
+  generateNodeWithReadings(
+    'dininigroomWindow',
+    'diningroom',
+    false,
+    1,
+    { percent: 79, interval: 15 },
+    16,
+    new Date(),
+    new Date('2021/02/01'),
+  ),
+  generateNodeWithReadings(
+    'diningroomCeiling',
+    'diningroom',
+    true,
+    1,
+    { percent: 79, interval: 15 },
+    22,
+    new Date(),
+    new Date('2021/02/01'),
+  ),
+  generateNodeWithReadings(
+    'officeTempSensor',
+    'office',
+    true,
+    1,
+    { percent: 79, interval: 15 },
+    20,
+    new Date(),
+    new Date('2021/04/01'),
+  ),
+  generateNodeWithReadings(
+    'garageDHT',
+    null,
+    false,
+    1,
+    { percent: 49, interval: 5 },
+    16,
+    new Date(),
+    new Date('2021/04/01'),
+  ),
+  generateNodeWithReadings(
+    'workshopDHT',
+    null,
+    false,
+    1,
+    { percent: 39, interval: 5 },
+    16,
+    new Date(),
+    new Date('2021/03/15'),
+  ),
+  generateNodeWithReadings(
+    'bedroomDHT',
+    'bedroom',
+    true,
+    1,
+    { percent: 78, interval: 20 },
+    21,
+    new Date(),
+    new Date('2021/03/15'),
+  ),
+  {
+    clientId: 'terrace',
+    isConfigured: true,
+    location: 'outdoor',
+    readingDefinitions: readingDefDefault,
+    latestReading: {
+      values: {
+        temperature: getRandomTemp(21),
+        humidity: getRandomHumidity(67, 5),
+        doorStatus: 'open',
+      },
+      createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+    },
+    readings: [],
+  },
+];
+
 const nodesWithReadings = () => [
-  generateNode(
+  generateNodeWithReadings(
     'HallwayDHT',
     'MainHallWay',
     false,
@@ -126,7 +235,7 @@ const nodesWithReadings = () => [
     new Date('2021/03/15'),
   ),
   {
-    id: 'livingRoomTempSensor',
+    clientId: 'livingRoomTempSensor',
     isConfigured: true,
     location: 'livingroom',
     readingDefinitions: [
@@ -184,7 +293,7 @@ const nodesWithReadings = () => [
       },
     ],
   },
-  generateNode(
+  generateNodeWithReadings(
     'kitchenTempSensor',
     'kitchen',
     false,
@@ -194,7 +303,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/02/01'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'dininigroomWindow',
     'diningroom',
     false,
@@ -204,7 +313,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/02/01'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'diningroomCeiling',
     'diningroom',
     true,
@@ -214,7 +323,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/02/01'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'officeTempSensor',
     'office',
     true,
@@ -224,7 +333,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/04/01'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'garageDHT',
     null,
     false,
@@ -234,7 +343,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/04/01'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'workshopDHT',
     null,
     false,
@@ -244,7 +353,7 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/03/15'),
   ),
-  generateNode(
+  generateNodeWithReadings(
     'bedroomDHT',
     'bedroom',
     true,
@@ -290,5 +399,6 @@ const locations = () => [
 module.exports = {
   nodes: () => nodes(),
   nodesWithReadings: () => nodesWithReadings(),
+  nodesWithSinleReading: () => nodesWithSingleReading(),
   locations: () => locations,
 };

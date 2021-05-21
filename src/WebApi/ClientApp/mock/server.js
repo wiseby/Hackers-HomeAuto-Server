@@ -11,18 +11,26 @@ server.listen(port, () => {
   console.log('JSON Server is running on port ', port);
 });
 
-server.get('/api/nodes', ({ query, body }, res) => {
+server.get('/api/v1/nodes', ({ query, body }, res) => {
   console.log('query: ', query);
   console.log('body: ', body);
 
+  let nodes = [];
+  node.nodesWithSinleReading().map((n) => {
+    if (n.readings.length > 0) {
+      n.latestReading = n.readings[0];
+    }
+    nodes.push(n);
+  });
+
   const data = {
-    data: node.nodes(),
+    data: nodes,
   };
 
   res.json(data);
 });
 
-server.get('/api/nodes/:clientId', ({ query, body, params }, res) => {
+server.get('/api/v1/nodes/:clientId', ({ query, body, params }, res) => {
   console.log('query: ', query);
   console.log('body: ', body);
   console.log('params: ', params);
