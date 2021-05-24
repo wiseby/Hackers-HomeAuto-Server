@@ -4,8 +4,11 @@ import { ContainerComponent } from '@roomsight/container/container.component';
 import { RoomComponent } from '@roomsight//components/room/room.component';
 
 const routes: Routes = [
-  { path: 'roomsight', component: ContainerComponent, pathMatch: 'full' },
-  { path: 'roomsight/:room', component: RoomComponent },
+  {
+    path: 'roomsight',
+    component: ContainerComponent,
+    children: [{ path: ':room', component: RoomComponent }],
+  },
 ];
 
 @NgModule({

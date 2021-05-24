@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NodeDevice } from '@core/models/NodeDevice';
+import { NodeService } from '@core/services/node.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-configurations-container',
@@ -6,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./container.component.sass'],
 })
 export class ContainerComponent implements OnInit {
-  constructor() {}
+  public nodes: Observable<NodeDevice[]> = null;
 
-  ngOnInit(): void {}
+  constructor(private nodeService: NodeService) {}
+
+  ngOnInit(): void {
+    this.nodes = this.nodeService.getAllNodes();
+  }
 }

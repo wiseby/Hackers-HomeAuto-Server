@@ -45,6 +45,16 @@ const generateNodeWithReadings = (
       },
     ],
     readings: [],
+    latestReading: {
+      values: {
+        temperature: getRandomTemp(temperature).toString(),
+        humidity: getRandomHumidity(
+          humidity.percent,
+          humidity.interval,
+        ).toString(),
+      },
+      createdAt: new Date(),
+    },
   };
 
   for (let i = 0; i < readingsLenth; i++) {
@@ -60,7 +70,6 @@ const generateNodeWithReadings = (
     };
     node.readings.push(reading);
   }
-  console.log('Generated Node: ', node);
   return node;
 };
 
@@ -125,12 +134,12 @@ const nodes = () => [
   },
 ];
 
-const nodesWithSingleReading = () => [
+const nodesWithLatestReading = () => [
   generateNodeWithReadings(
     'HallwayDHT',
     'MainHallWay',
     false,
-    1,
+    0,
     { percent: 67, interval: 5 },
     19,
     new Date(),
@@ -140,7 +149,7 @@ const nodesWithSingleReading = () => [
     'kitchenTempSensor',
     'kitchen',
     false,
-    1,
+    0,
     { percent: 70, interval: 10 },
     21,
     new Date(),
@@ -150,7 +159,7 @@ const nodesWithSingleReading = () => [
     'dininigroomWindow',
     'diningroom',
     false,
-    1,
+    0,
     { percent: 79, interval: 15 },
     16,
     new Date(),
@@ -160,7 +169,7 @@ const nodesWithSingleReading = () => [
     'diningroomCeiling',
     'diningroom',
     true,
-    1,
+    0,
     { percent: 79, interval: 15 },
     22,
     new Date(),
@@ -170,7 +179,7 @@ const nodesWithSingleReading = () => [
     'officeTempSensor',
     'office',
     true,
-    1,
+    0,
     { percent: 79, interval: 15 },
     20,
     new Date(),
@@ -180,7 +189,7 @@ const nodesWithSingleReading = () => [
     'garageDHT',
     null,
     false,
-    1,
+    0,
     { percent: 49, interval: 5 },
     16,
     new Date(),
@@ -190,7 +199,7 @@ const nodesWithSingleReading = () => [
     'workshopDHT',
     null,
     false,
-    1,
+    0,
     { percent: 39, interval: 5 },
     16,
     new Date(),
@@ -200,7 +209,7 @@ const nodesWithSingleReading = () => [
     'bedroomDHT',
     'bedroom',
     true,
-    1,
+    0,
     { percent: 78, interval: 20 },
     21,
     new Date(),
@@ -234,65 +243,6 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/03/15'),
   ),
-  {
-    clientId: 'livingRoomTempSensor',
-    isConfigured: true,
-    location: 'livingroom',
-    readingDefinitions: [
-      {
-        name: 'temperature',
-        dataType: 'celcius',
-      },
-      {
-        name: 'humidity',
-        dataType: 'percent',
-      },
-    ],
-    readings: [
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-      {
-        values: {
-          temperature: getRandomTemp(21),
-          humidity: getRandomHumidity(67, 5),
-        },
-        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
-      },
-    ],
-  },
   generateNodeWithReadings(
     'kitchenTempSensor',
     'kitchen',
@@ -363,6 +313,65 @@ const nodesWithReadings = () => [
     new Date(),
     new Date('2021/03/15'),
   ),
+  {
+    clientId: 'livingRoomTempSensor',
+    isConfigured: true,
+    location: 'livingroom',
+    readingDefinitions: [
+      {
+        name: 'temperature',
+        dataType: 'celcius',
+      },
+      {
+        name: 'humidity',
+        dataType: 'percent',
+      },
+    ],
+    readings: [
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+      {
+        values: {
+          temperature: getRandomTemp(21),
+          humidity: getRandomHumidity(67, 5),
+        },
+        createdAt: getRandomDateTime(new Date(), new Date('2021/02/01'), 0, 23),
+      },
+    ],
+  },
 ];
 
 const locations = () => [
@@ -399,6 +408,6 @@ const locations = () => [
 module.exports = {
   nodes: () => nodes(),
   nodesWithReadings: () => nodesWithReadings(),
-  nodesWithSinleReading: () => nodesWithSingleReading(),
+  nodesWithLatestReading: () => nodesWithLatestReading(),
   locations: () => locations,
 };
