@@ -1,0 +1,7 @@
+<div class="columns is-multiline p-4">
+  <ng-container *ngFor="let node of nodes | async">
+    <div class="column">
+      <app-node-card [node]="this.node" [showConfigure]="false"></app-node-card>
+    </div>
+  </ng-container>
+</div>
