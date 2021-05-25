@@ -1,11 +1,10 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
-using MqttServer.Extensions;
-using Application.Models;
 using Autofac;
-using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Server;
+using MqttServer.Extensions;
 
 using Serilog;
 
@@ -17,6 +16,7 @@ namespace MqttServer
         private static IMqttServer mqttServer;
         public static IContainer Container;
         private static IConfiguration configuration;
+        public static MqttOptions options;
 
         public static async void InitializeAndRun(string[] args)
         {
@@ -25,11 +25,14 @@ namespace MqttServer
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
             configuration = builder.Build();
+
             InitializeContainer();
+            Log.Logger = Container.Resolve<ILogger>();
             interceptor = Container.Resolve<MessageInterceptor>();
-            var options = new MqttServerOptionsBuilder()
-                .WithDefaultEndpointPort(1883)
-                .WithConnectionBacklog(100)
+            options = Container.Resolve<MqttOptions>();
+            var serverOptions = new MqttServerOptionsBuilder()
+                .WithDefaultEndpointPort(options.BrokerPort)
+                .WithConnectionBacklog(options.ConnectionBacklog)
                 .WithApplicationMessageInterceptor(context =>
                 {
                     interceptor.Intercept(context);
@@ -40,15 +43,13 @@ namespace MqttServer
             mqttServer = new MqttFactory().CreateMqttServer();
 
             Log.Information("MqttServer starting...");
-            await mqttServer.StartAsync(options);
+            await mqttServer.StartAsync(serverOptions);
         }
 
         public static void InitializeContainer()
         {
             var builder = new ContainerBuilder();
-            // Get configuration snapshot
-            var config = configuration.GetSection(AppOptions.Position).Get<AppOptions>();
-            DependencyRegistration.Register(builder, config);
+            DependencyRegistration.Register(builder, configuration);
             Container = builder.Build();
         }
 
