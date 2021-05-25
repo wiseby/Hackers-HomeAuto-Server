@@ -1,9 +1,9 @@
 using System;
-using Application.Extensions;
+using System.IO;
+using MqttServer.Extensions;
 using Application.Models;
-using Application.MqttContextHandler;
 using Autofac;
-using DataAccess;
+using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Server;
 
@@ -16,9 +16,15 @@ namespace MqttServer
         private static MessageInterceptor interceptor;
         private static IMqttServer mqttServer;
         public static IContainer Container;
+        private static IConfiguration configuration;
 
         public static async void InitializeAndRun(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            configuration = builder.Build();
             InitializeContainer();
             interceptor = Container.Resolve<MessageInterceptor>();
             var options = new MqttServerOptionsBuilder()
@@ -40,18 +46,9 @@ namespace MqttServer
         public static void InitializeContainer()
         {
             var builder = new ContainerBuilder();
-
-            builder.Register(c => new MqttLogger("./logs/MqttServer.log")).As<ILogger>();
-            builder.RegisterType<MqttContextHandler>().As<IMqttContextHandler>();
-            builder.RegisterType<MessageInterceptor>().AsSelf();
-
             // Get configuration snapshot
-
-            var options = new AppOptions();
-            options.ConnectionString = "mongodb://root:example@localhost:27017";
-
-            DependencyRegistration.Register(builder, options);
-
+            var config = configuration.GetSection(AppOptions.Position).Get<AppOptions>();
+            DependencyRegistration.Register(builder, config);
             Container = builder.Build();
         }
 

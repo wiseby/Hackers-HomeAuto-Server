@@ -14,7 +14,7 @@ namespace Application.MqttContextHandler
         private readonly ILogger logger;
         private readonly string database;
 
-        public MqttContextHandler(MongoConnection connection, ILogger logger)
+        public MqttContextHandler(IMongoConnection connection, ILogger logger)
         {
             this.mongoClient = connection.GetConnection();
             this.logger = logger;
