@@ -10,6 +10,10 @@ namespace Application.Models
         public string ClientId { get; set; }
         [BsonElement("isConfigured")]
         public bool IsConfigured { get; set; }
+        [BsonIgnore]
+        public Reading LatestReading { get; set; }
+        [BsonIgnore]
+        public long ReadingsAvailable { get; set; }
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; }
     }

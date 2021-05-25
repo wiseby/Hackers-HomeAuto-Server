@@ -63,6 +63,24 @@ namespace Application.Repositries
             }
         }
 
+        public async Task<long> GetReadingCount(string clientId)
+        {
+            var database = mongoClient.GetDatabase(this.configuration.Database);
+            var readingsCollection = database.GetCollection<Reading>("Readings");
+            var builder = Builders<Reading>.Filter;
+            var filter = builder.Eq(reading => reading.ClientId, clientId);
+
+
+            try
+            {
+                return await readingsCollection.Find(filter).CountDocumentsAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to count readings", e);
+            }
+        }
+
         public async Task<IEnumerable<Reading>> ReadAll()
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);

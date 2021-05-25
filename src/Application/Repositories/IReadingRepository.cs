@@ -8,5 +8,6 @@ namespace Application.Repositries
     {
         Task<IEnumerable<Reading>> GetAllByClientId(string clientId);
         Task<Reading> GetLatestByClientId(string clientId);
+        Task<long> GetReadingCount(string clientId);
     }
 }

@@ -1,16 +1,10 @@
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace WebApi.Models
 {
-    public class JsonResponse
+    public class JsonResponse<T>
     {
-        public JsonData Data { get; set; }
-    }
-
-    public class JsonData
-    {
-        public string Type { get; set; }
-        public string Id { get; set; }
-        public Dictionary<string, object> Attributes { get; set; }
+        [JsonInclude]
+        public T Data { get; set; }
     }
 }
