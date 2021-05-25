@@ -4,14 +4,8 @@
 
 export const environment = {
   production: false,
+  local: false,
 };
-
-export function getBaseUrl(): string {
-  if (environment.production) {
-    return document.getElementsByTagName('base')[0].href;
-  }
-  return 'http://localhost:3000';
-}
 
 /*
  * For easier debugging in development mode, you can import the following file

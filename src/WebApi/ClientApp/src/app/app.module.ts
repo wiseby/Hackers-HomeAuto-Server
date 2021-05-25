@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { ConfigurationModule } from './configurations/configuration.module';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { RoomsightModule } from './roomsight/roomsight.module';
-import { getBaseUrl } from 'src/environments/environment';
+import { getBaseUrl } from 'src/main';
 import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
