@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace DataAccess 
+namespace DataAccess
 {
     public class MongoConnection : IMongoConnection
     {
@@ -10,7 +10,7 @@ namespace DataAccess
             this.mongoClient = new MongoClient(connectionString);
         }
 
-        public MongoClient GetConnection() 
+        public MongoClient GetConnection()
         {
             return this.mongoClient;
         }

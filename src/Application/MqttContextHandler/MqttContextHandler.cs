@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Application.Models;
 using DataAccess;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,14 +14,14 @@ namespace Application.MqttContextHandler
         private readonly ILogger logger;
         private readonly string database;
 
-        public MqttContextHandler(MongoConnection connection, ILogger logger)
+        public MqttContextHandler(IMongoConnection connection, ILogger logger)
         {
             this.mongoClient = connection.GetConnection();
             this.logger = logger;
             this.database = "hha_dev";
         }
 
-        public async Task SaveContext(ContextModel context)
+        public async Task SaveContext(Context context)
         {
             if (!(await IsConfigured(context.ClientId)))
             {
@@ -39,7 +40,7 @@ namespace Application.MqttContextHandler
             return result != null;
         }
 
-        private async Task SavePendingNode(ContextModel context)
+        private async Task SavePendingNode(Context context)
         {
             var database = mongoClient.GetDatabase(this.database);
             var collection = database.GetCollection<Node>("Nodes");
@@ -59,7 +60,7 @@ namespace Application.MqttContextHandler
             }
         }
 
-        private Task SaveReading(ContextModel context)
+        private Task SaveReading(Context context)
         {
             var database = mongoClient.GetDatabase(this.database);
             var collection = database.GetCollection<Reading>("Readings");

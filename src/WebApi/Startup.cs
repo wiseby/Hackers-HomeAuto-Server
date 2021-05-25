@@ -1,5 +1,8 @@
 using Application.Extensions;
+using Application.Mappings;
+using Application.Models;
 using Autofac;
+using AutoMapper.Contrib.Autofac.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -31,13 +34,14 @@ namespace WebApi
         // called by the runtime before the ConfigureContainer method, below.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppOptions>(Configuration.GetSection(AppOptions.Position));
             services.AddOptions();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hackers-HomeAuto-Api", Version = "v1" });
             });
-            
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -50,8 +54,9 @@ namespace WebApi
             // Register your own things directly with Autofac here. Don't
             // call builder.Populate(), that happens in AutofacServiceProviderFactory
             // for you.
-            //builder.RegisterModule(new MyApplicationModule());
-            DependencyRegistration.Register(builder);
+            var config = Configuration.GetSection(AppOptions.Position).Get<AppOptions>();
+            builder.RegisterAutoMapper(typeof(NodeProfile).Assembly);
+            DependencyRegistration.Register(builder, config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +91,7 @@ namespace WebApi
 
                     if (env.IsDevelopment())
                     {
-                        spa.UseAngularCliServer(npmScript: "start");
+                        spa.UseAngularCliServer(npmScript: "start:dotnet");
                     }
                 });
             });

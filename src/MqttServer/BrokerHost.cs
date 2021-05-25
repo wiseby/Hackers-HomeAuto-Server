@@ -1,10 +1,10 @@
+using Microsoft.Extensions.Configuration;
 using System;
-using Application.Extensions;
-using Application.MqttContextHandler;
+using System.IO;
 using Autofac;
-using DataAccess;
 using MQTTnet;
 using MQTTnet.Server;
+using MqttServer.Extensions;
 
 using Serilog;
 
@@ -15,14 +15,24 @@ namespace MqttServer
         private static MessageInterceptor interceptor;
         private static IMqttServer mqttServer;
         public static IContainer Container;
+        private static IConfiguration configuration;
+        public static MqttOptions options;
 
         public static async void InitializeAndRun(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            configuration = builder.Build();
+
             InitializeContainer();
+            Log.Logger = Container.Resolve<ILogger>();
             interceptor = Container.Resolve<MessageInterceptor>();
-            var options = new MqttServerOptionsBuilder()
-                .WithDefaultEndpointPort(1883)
-                .WithConnectionBacklog(100)
+            options = Container.Resolve<MqttOptions>();
+            var serverOptions = new MqttServerOptionsBuilder()
+                .WithDefaultEndpointPort(options.BrokerPort)
+                .WithConnectionBacklog(options.ConnectionBacklog)
                 .WithApplicationMessageInterceptor(context =>
                 {
                     interceptor.Intercept(context);
@@ -33,25 +43,13 @@ namespace MqttServer
             mqttServer = new MqttFactory().CreateMqttServer();
 
             Log.Information("MqttServer starting...");
-            await mqttServer.StartAsync(options);
+            await mqttServer.StartAsync(serverOptions);
         }
 
         public static void InitializeContainer()
         {
             var builder = new ContainerBuilder();
-
-            builder.Register(c => new MqttLogger("./logs/MqttServer.log")).As<ILogger>();
-            builder.RegisterType<MqttContextHandler>().As<IMqttContextHandler>();
-            builder.RegisterType<MessageInterceptor>().AsSelf();
-
-            // Get configuration snapshot
-
-            builder.Register<MongoConnection>(c => new MongoConnection("mongodb://root:example@localhost:27017"))
-                .AsSelf()
-                .SingleInstance();
-
-            DependencyRegistration.Register(builder);
-
+            DependencyRegistration.Register(builder, configuration);
             Container = builder.Build();
         }
 
