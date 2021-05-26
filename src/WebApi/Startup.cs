@@ -1,4 +1,4 @@
-using Application.Extensions;
+using WebApi.Extensions;
 using Application.Mappings;
 using Application.Models;
 using Autofac;
@@ -54,9 +54,8 @@ namespace WebApi
             // Register your own things directly with Autofac here. Don't
             // call builder.Populate(), that happens in AutofacServiceProviderFactory
             // for you.
-            var config = Configuration.GetSection(AppOptions.Position).Get<AppOptions>();
             builder.RegisterAutoMapper(typeof(NodeProfile).Assembly);
-            DependencyRegistration.Register(builder, config);
+            DependencyRegistration.Register(builder, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
