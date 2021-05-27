@@ -1,12 +1,15 @@
+using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Application.Models
 {
-    public class ReadingDefinition
+    [BsonIgnoreExtraElements]
+    public class ReadingDefinition : IClientEntity
     {
-        [BsonId]
         [BsonElement("clientId")]
         public string ClientId { get; set; }
+
         [BsonElement("name")]
         public string Name { get; set; }
         [BsonElement("icon")]

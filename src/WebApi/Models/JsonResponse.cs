@@ -24,4 +24,9 @@ namespace WebApi.Models
             this.Errors = errors;
         }
     }
+
+    public class JsonRequest<T>
+    {
+        public T Data { get; set; }
+    }
 }

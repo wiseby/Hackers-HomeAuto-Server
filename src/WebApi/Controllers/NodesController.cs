@@ -9,6 +9,7 @@ using Application.Dtos;
 using Application.Models;
 using Application.Services;
 using WebApi.Models;
+using System.Threading;
 
 namespace WebApi.Controllers
 {
@@ -41,11 +42,11 @@ namespace WebApi.Controllers
         /// <response code="200">Returns the newly created item</response>     
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<NodeDto>>> GetNodes()
+        public async Task<ActionResult<IEnumerable<NodeDto>>> GetNodes(CancellationToken cancellationToken)
         {
             try
             {
-                var nodes = await this.nodeService.GetNodes();
+                var nodes = await this.nodeService.GetNodes(cancellationToken);
                 var nodeDtos = this.mapper.Map<IEnumerable<Node>, List<NodeDto>>(nodes);
                 var response = new JsonOkResponse<IEnumerable<NodeDto>>(nodeDtos);
                 return Ok(response);
@@ -68,11 +69,11 @@ namespace WebApi.Controllers
         [HttpGet("{clientId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<NodeDto>> GetNodeById(
-            [FromRoute] string clientId)
+            [FromRoute] string clientId, CancellationToken cancellationToken)
         {
             try
             {
-                var node = await this.nodeService.GetNodeById(clientId);
+                var node = await this.nodeService.GetNodeById(clientId, cancellationToken);
                 var data = this.mapper.Map<NodeDto>(node);
                 var response = new JsonOkResponse<NodeDto>(data);
                 return Ok(response);
@@ -95,11 +96,11 @@ namespace WebApi.Controllers
         [HttpGet("{clientId}/readings")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ReadingDto>>> GetNodeReadings(
-            [FromRoute] string clientId)
+            [FromRoute] string clientId, CancellationToken cancellationToken)
         {
             try
             {
-                var readings = await this.nodeService.GetReadingsById(clientId);
+                var readings = await this.nodeService.GetReadingsById(clientId, cancellationToken);
                 var data = this.mapper
                     .Map<IEnumerable<Reading>, List<ReadingDto>>(readings);
                 var response = new JsonOkResponse<IEnumerable<ReadingDto>>(data);
@@ -115,22 +116,25 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Fetches all nodes.
+        /// Fetches all definitions for a node by specified clientId.
         /// </summary>
         /// <remarks>
-        /// <param name="node"></param>
-        /// <returns>A list of nodes</returns>
-        /// <response code="200">Returns the newly created item</response>     
+        /// <param name="clientId for a specific node"></param>
+        /// <returns>A list of definitions</returns>
+        /// <response code="200">Returns a list of definitions</response>
         [HttpGet("{clientId}/definitions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<string>>> GetDefinitions(
-            [FromRoute] string clientId)
+            [FromRoute] string clientId, CancellationToken cancellationToken)
         {
             try
             {
                 var definitions = await this.nodeService.GetDefinitionsByClientId(
-                    clientId);
-                return Ok();
+                    clientId, cancellationToken);
+                var definitionDtos = this.mapper
+                    .Map<IEnumerable<ReadingDefinition>, IEnumerable<ReadingDefinitionDto>>(definitions);
+                var response = new JsonOkResponse<IEnumerable<ReadingDefinitionDto>>(definitionDtos);
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -142,22 +146,25 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Fetches all nodes.
+        /// Updates definitions for readings specified by a Node ClientId.
         /// </summary>
         /// <remarks>
-        /// <param name="node"></param>
-        /// <returns>A list of nodes</returns>
-        /// <response code="201">Returns the newly created item</response>     
-        [HttpPut("{clientId}/definitions")]
+        /// <param name="clientId"></param>
+        /// <param name="reading definitions"></param>
+        /// <response code="201">No content if creation was successfull</response>
+        [HttpPatch("{clientId}/definitions")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<IEnumerable<string>>> UpdateDefinitions(
-            [FromRoute] string clientId, [FromBody] ReadingDefinition definition)
+            [FromRoute] string clientId,
+            [FromBody] JsonRequest<IEnumerable<ReadingDefinitionDto>> request,
+            CancellationToken cancellationToken)
         {
             try
             {
-                var definitions = await this.nodeService.UpdateDefinitions(
-                    clientId, definition);
-                return Ok();
+                var definitions = this.mapper.Map<IEnumerable<ReadingDefinition>>(request.Data);
+                var defResult = await this.nodeService.UpdateDefinitions(
+                    clientId, definitions, cancellationToken);
+                return StatusCode(201);
             }
             catch (Exception e)
             {
