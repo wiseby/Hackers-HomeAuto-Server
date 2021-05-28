@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   faDoorOpen,
   faMapMarkedAlt,
@@ -21,6 +21,8 @@ export class NodeCardComponent implements OnInit {
   @Input() public node: NodeDevice;
   @Input() public showConfigure = false;
   @Input() public showDetails = true;
+  @Output() public detailsClicked = new EventEmitter<NodeDevice>();
+  @Output() public configureClicked = new EventEmitter<NodeDevice>();
 
   private _readings: Dictionary;
   public get readings(): Dictionary {

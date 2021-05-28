@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -21,8 +22,11 @@ import {
   templateUrl: './node-statistics.component.html',
   styleUrls: ['./node-statistics.component.sass'],
 })
-export class NodeStatisticsComponent implements OnInit, AfterViewInit {
+export class NodeStatisticsComponent
+  implements OnInit, OnChanges, AfterViewInit {
   @Input() public node: NodeDevice;
+
+  private chartRef: Chart;
 
   public get chartConf(): ChartConfiguration {
     const conf: ChartConfiguration = {
@@ -43,7 +47,6 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
   public lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
       xAxes: [
         {
           id: 'dates',
@@ -66,7 +69,7 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
   public lineChartType: ChartType = 'line';
 
   @ViewChild('temperatureChart') temperatureChart: ElementRef;
-  @ViewChild('humidityChart') humidityChart: ElementRef;
+  @ViewChild('canvasColumn') canvasColumn: ElementRef;
 
   constructor(private nodeService: NodeService) {}
 
@@ -91,6 +94,7 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
       humData.push(reading.values.humidity);
       labels.push(this.getFormatedDate(reading.createdAt.toString()));
     });
+    this.chartData.datasets = [];
     this.chartData.datasets.push({
       data: tempData,
       label: this.node.clientId + ' - Temperature',
@@ -112,7 +116,17 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
     this.buildTempChart();
   }
 
+  ngOnChanges(): void {
+    this.buildTempChart();
+    if (this.temperatureChart !== undefined) {
+      this.chartRef.update();
+    }
+  }
+
   ngAfterViewInit(): void {
-    new Chart(this.temperatureChart.nativeElement, this.chartConf);
+    this.chartRef = new Chart(
+      this.temperatureChart.nativeElement,
+      this.chartConf,
+    );
   }
 }
