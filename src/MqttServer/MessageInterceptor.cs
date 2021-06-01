@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
-using DataAccess;
-using MongoDB.Bson;
-using MQTTnet;
+using Application.Models;
+using Application.MqttContextHandler;
 using MQTTnet.Server;
 using Serilog;
 
@@ -13,40 +11,52 @@ namespace MqttServer
     public class MessageInterceptor
     {
         private readonly ILogger logger;
-        private readonly MongoConnection connection;
+        private readonly IMqttContextHandler handler;
 
-        public MessageInterceptor(ILogger logger, MongoConnection connection)
+        public MessageInterceptor(ILogger logger, IMqttContextHandler handler)
         {
             this.logger = logger;
-            this.connection = connection;
+            this.handler = handler;
         }
 
 
         public void Intercept(MqttApplicationMessageInterceptorContext context)
         {
-            Log.Information($"Intercepting message");
-            var payload = JsonSerializer.Deserialize<Dictionary<string, string>>(context.ApplicationMessage.Payload);
-            Log.Information($"Topic: {context.ApplicationMessage.Topic} | Payload: {payload["msg"]}");
-            context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes("Server injected payload");
-
-            SaveMessage(context.ApplicationMessage);
+            if (context.ApplicationMessage.Topic == "hha-server")
+            {
+                SaveMessage(context);
+            }
         }
 
-        private async void SaveMessage(MqttApplicationMessage message)
+        private async void SaveMessage(MqttApplicationMessageInterceptorContext interceptContext)
         {
-            logger.Information("Saving to database");
-            var database = connection.MongoClient.GetDatabase("mqtt_topics");
-            var collection = database.GetCollection<BsonDocument>("messages");
-            var document = new BsonDocument
+            try
             {
-                { "topic", message.Topic },
-                { "message", "saving topic" },
-                { "createdat", DateTime.Now }
-            };
-            await collection.InsertOneAsync(document);
+                var context = new Context()
+                {
+                    ClientId = interceptContext.ClientId,
+                    Topic = interceptContext.ApplicationMessage.Topic,
+                    Payload = ConvertPayload(interceptContext.ApplicationMessage.Payload)
+                };
 
-            var count = collection.CountDocuments(new BsonDocument());
-            logger.Information($"Number of entries in db: {count}");
+                await handler.SaveContext(context);
+            }
+            catch (JsonException e)
+            {
+                this.logger.Error("Failed to convert messagepayload. Saving message aborted", e);
+            }
+        }
+
+        private Dictionary<string, object> ConvertPayload(byte[] messagePayload)
+        {
+            var jsonString = Encoding.UTF8.GetString(messagePayload);
+            var deserializedPayload = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString);
+            var payload = new Dictionary<string, object>();
+            foreach (var kvp in deserializedPayload)
+            {
+                payload.Add(kvp.Key, (object)kvp.Value);
+            }
+            return payload;
         }
     }
 }

@@ -1,15 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { ContainerComponent } from '@configurations/container/container.component';
-import { NodeDetailsComponent } from './components/node-details/node-details.component';
+import { NodeConfigSelectionComponent } from './components/node-config-selection/node-config-selection.component';
+import { NodeConfigComponent } from './components/node-config/node-config.component';
+import { ContainerComponent } from './container/container.component';
 
 const routes: Routes = [
-  { path: 'configurations', component: ContainerComponent, pathMatch: 'full' },
   {
-    path: 'configurations/:guid',
-    component: NodeDetailsComponent,
-    pathMatch: 'full',
+    path: 'nodes/configurations',
+    component: ContainerComponent,
+    children: [
+      {
+        path: '',
+        component: NodeConfigSelectionComponent,
+      },
+      {
+        path: ':clientId',
+        component: NodeConfigComponent,
+      },
+    ],
   },
 ];
 

@@ -1,0 +1,36 @@
+<div class="card">
+  <div class="card-header has-background-primary">
+    <div class="card-header-title">{{ this.node.clientId }}</div>
+    <div class="card-header-icon">
+      <fa-icon [icon]="this.defaultIcon"></fa-icon>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="columns"></div>
+    <ng-container *ngFor="let key of this.readings.keys()">
+      <div class="columns is-mobile">
+        <div class="column is-one-third-mobile">{{ key | uppercase }}</div>
+        <div class="column is-one-third-mobile">{{ this.readings[key] }}</div>
+        <div class="column is-one-third-mobile">
+          <fa-icon [icon]="this.getIcon(key)"></fa-icon>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="card-footer">
+    <a
+      *ngIf="this.showDetails"
+      (click)="this.detailsClicked.emit(this.node)"
+      class="card-footer-item has-background-info has-text-white"
+      >Details</a
+    >
+    <a
+      *ngIf="this.showConfigure"
+      (click)="this.configureClicked.emit(this.node)"
+      class="card-footer-item has-background-info-light has-text-black"
+      >Configure</a
+    >
+  </div>
+</div>

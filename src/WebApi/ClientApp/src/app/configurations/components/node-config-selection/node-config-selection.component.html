@@ -1,0 +1,12 @@
+<div class="columns is-full-height is-multiline p-4">
+  <ng-container *ngFor="let node of nodes | async">
+    <div class="column">
+      <app-node-card
+        [node]="node"
+        [showConfigure]="true"
+        [showDetails]="false"
+        (configureClicked)="this.navigateToNodeConfig(node)"
+      ></app-node-card>
+    </div>
+  </ng-container>
+</div>

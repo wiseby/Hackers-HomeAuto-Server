@@ -6,7 +6,10 @@
     "paths": {
       "@roomsight/*": ["src/app/roomsight/*"],
       "@configurations/*": ["src/app/configurations/*"],
-      "@shared/*": ["src/app/shared/*"]
+      "@shared/*": ["src/app/shared/*"],
+      "@core/*": ["src/app/core/*"],
+      "@home/*": ["src/app/home/*"],
+      "@node-details/*": ["src/app/node-details/*"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -15,11 +18,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES6",
+    "target": "es2015",
     "module": "es2020",
     "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictTemplates": true,
+    "fullTemplateTypeCheck": true
   }
 }

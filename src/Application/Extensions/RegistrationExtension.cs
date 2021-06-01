@@ -1,5 +1,6 @@
+using Application.Repositries;
+using Application.Services;
 using Autofac;
-using MediatR;
 
 namespace Application.Extensions
 {
@@ -8,17 +9,9 @@ namespace Application.Extensions
         // Register all dependencies here:
         public static void Register(this ContainerBuilder builder)
         {
-            builder.RegisterType<Mediator>()
-                .As<IMediator>()
-                .InstancePerLifetimeScope();
-
-            builder.Register<ServiceFactory>(context =>
-            {
-                var c = context.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-
-            // builder.RegisterAssemblyTypes(typeof(Application).GetTypeInfo().Assembly);
+            builder.RegisterType<NodeRepository>().As<INodeRepository>();
+            builder.RegisterType<ReadingRepository>().As<IReadingRepository>();
+            builder.RegisterType<NodeService>().As<INodeService>();
         }
     }
 }

@@ -1,13 +1,18 @@
 using MongoDB.Driver;
 
-namespace DataAccess 
+namespace DataAccess
 {
-    public class MongoConnection
+    public class MongoConnection : IMongoConnection
     {
-        public readonly MongoClient MongoClient;
+        private readonly MongoClient mongoClient;
         public MongoConnection(string connectionString)
         {
-            this.MongoClient = new MongoClient(connectionString);
+            this.mongoClient = new MongoClient(connectionString);
+        }
+
+        public MongoClient GetConnection()
+        {
+            return this.mongoClient;
         }
     }
 }

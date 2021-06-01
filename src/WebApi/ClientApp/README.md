@@ -1,10 +1,14 @@
-# HackersHomeauto
+# Hackers-HomeAuto Client Application
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.3.
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+Run `npm run start` for dev server with mock api. Same features as above but implements a mock api server with json-server.
+
+Run `npm run start:dotnet` to serve the angular app in parallel to the Asp.Net WebApi. This configuration targets http requests on https://localhost:5001. (WebApi project needs to be running in another process)
 
 ## Code scaffolding
 

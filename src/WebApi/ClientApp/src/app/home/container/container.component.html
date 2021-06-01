@@ -1,0 +1,38 @@
+<div class="columns has-fullheight">
+  <div class="column is-3 m-4" style="overflow: auto">
+    <ng-container *ngFor="let node of nodes | async">
+      <div class="columns is-multiline">
+        <div class="column">
+          <app-node-card
+            [node]="this.node"
+            [showConfigure]="false"
+            (detailsClicked)="this.nodeSelected($event)"
+          ></app-node-card>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="column has-fullheight has-background-white">
+    <ng-container *ngIf="this.selectedNode !== undefined">
+      <div class="columns">
+        <div class="column is-10">
+          <node-statistics [node]="this.selectedNode"></node-statistics>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column pt-4">
+          <div class="field is-grouped">
+            <p class="control">
+              <button
+                class="button is-warning"
+                [routerLink]="['./configurations', this.selectedNode.clientId]"
+              >
+                Configure
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
