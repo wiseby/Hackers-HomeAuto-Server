@@ -14,15 +14,7 @@ const routes: Routes = [
     loadChildren: () => import('@home/home.module').then((m) => m.HomeModule),
   },
   {
-    path: 'nodes/:clientId',
-    pathMatch: 'full',
-    loadChildren: () =>
-      import('@node-details/node-details.module').then(
-        (m) => m.NodeDetailsModule,
-      ),
-  },
-  {
-    path: 'nodes/:clientId/configure',
+    path: 'nodes/configurations',
     pathMatch: 'full',
     loadChildren: () =>
       import('@configurations/configuration.module').then(

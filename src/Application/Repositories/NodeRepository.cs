@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Models;
 using DataAccess;
@@ -18,7 +19,7 @@ namespace Application.Repositries
             this.configuration = configuration;
             this.mongoClient = connection.GetConnection();
         }
-        public async Task<Node> Create(Node entity)
+        public async Task<Node> Create(Node entity, CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var collection = database.GetCollection<Node>("Nodes");
@@ -30,9 +31,14 @@ namespace Application.Repositries
                 CreatedAt = DateTime.UtcNow
             };
 
+            var options = new InsertOneOptions
+            {
+                BypassDocumentValidation = false
+            };
+
             try
             {
-                await collection.InsertOneAsync(node);
+                await collection.InsertOneAsync(node, options, cancellationToken);
                 return node;
             }
             catch (MongoDuplicateKeyException e)
@@ -42,14 +48,15 @@ namespace Application.Repositries
             }
         }
 
-        public async Task<Node> Delete(Node node)
+        public async Task<Node> Delete(Node node, CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var collection = database.GetCollection<Node>("Nodes");
 
             try
             {
-                var result = await collection.DeleteOneAsync((node) => node.ClientId == node.ClientId);
+                var result = await collection.DeleteOneAsync(
+                    (node) => node.ClientId == node.ClientId, cancellationToken);
                 if (result.DeletedCount == 1)
                 {
                     return node;
@@ -64,7 +71,7 @@ namespace Application.Repositries
             }
         }
 
-        public async Task<Node> DeletePending(Node node)
+        public async Task<Node> DeletePending(Node node, CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var nodesCollection = database.GetCollection<Node>("Nodes");
@@ -78,8 +85,8 @@ namespace Application.Repositries
 
             try
             {
-                await readingsCollection.DeleteManyAsync(readingsFilter);
-                await nodesCollection.DeleteManyAsync(nodesFilter);
+                await readingsCollection.DeleteManyAsync(readingsFilter, cancellationToken);
+                await nodesCollection.DeleteManyAsync(nodesFilter, cancellationToken);
                 return node;
             }
             catch (Exception e)
@@ -88,7 +95,7 @@ namespace Application.Repositries
             }
         }
 
-        public async Task<IEnumerable<Node>> ReadAll()
+        public async Task<IEnumerable<Node>> ReadAll(CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var nodesCollection = database.GetCollection<Node>("Nodes");
@@ -96,7 +103,7 @@ namespace Application.Repositries
 
             try
             {
-                return await nodesCollection.Find(filter).ToListAsync();
+                return await nodesCollection.Find(filter).ToListAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -104,7 +111,7 @@ namespace Application.Repositries
             }
         }
 
-        public async Task<IEnumerable<Node>> ReadAllPending()
+        public async Task<IEnumerable<Node>> ReadAllPending(CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var nodesCollection = database.GetCollection<Node>("Nodes");
@@ -112,7 +119,7 @@ namespace Application.Repositries
 
             try
             {
-                return await nodesCollection.Find(filter).ToListAsync();
+                return await nodesCollection.Find(filter).ToListAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -120,7 +127,7 @@ namespace Application.Repositries
             }
         }
 
-        public Task<Node> ReadById(string id)
+        public Task<Node> ReadById(string id, CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var nodesCollection = database.GetCollection<Node>("Nodes");
@@ -128,7 +135,7 @@ namespace Application.Repositries
 
             try
             {
-                return nodesCollection.Find(filter).FirstOrDefaultAsync();
+                return nodesCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -136,7 +143,7 @@ namespace Application.Repositries
             }
         }
 
-        public async Task<Node> Update(Node node)
+        public async Task<Node> Update(Node node, CancellationToken cancellationToken)
         {
             var database = mongoClient.GetDatabase(this.configuration.Database);
             var nodesCollection = database.GetCollection<Node>("Nodes");
@@ -149,7 +156,7 @@ namespace Application.Repositries
 
             try
             {
-                return await nodesCollection.FindOneAndReplaceAsync(filter, node, options);
+                return await nodesCollection.FindOneAndReplaceAsync(filter, node, options, cancellationToken);
             }
             catch (Exception e)
             {
@@ -158,7 +165,7 @@ namespace Application.Repositries
 
         }
 
-        public Task<Node> UpdatePending(Node node)
+        public Task<Node> UpdatePending(Node node, CancellationToken cancellationToken)
         {
             // Make a pending configured
             // Add additional data for all values it represents

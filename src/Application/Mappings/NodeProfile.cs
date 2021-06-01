@@ -10,6 +10,8 @@ namespace Application.Mappings
         {
             CreateMap<Node, NodeDto>();
             CreateMap<Reading, ReadingDto>();
+            CreateMap<ReadingDefinition, ReadingDefinitionDto>();
+            CreateMap<ReadingDefinitionDto, ReadingDefinition>();
         }
     }
 }

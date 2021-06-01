@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   faDoorOpen,
   faMapMarkedAlt,
@@ -21,51 +21,50 @@ export class NodeCardComponent implements OnInit {
   @Input() public node: NodeDevice;
   @Input() public showConfigure = false;
   @Input() public showDetails = true;
+  @Output() public detailsClicked = new EventEmitter<NodeDevice>();
+  @Output() public configureClicked = new EventEmitter<NodeDevice>();
 
-  private _readings: Dictionary;
-  public get readings(): Dictionary {
+  private _readings: Dictionary<string>;
+  public get readings(): Dictionary<string> {
     return this._readings;
   }
-  public set readings(value: Dictionary) {
+  public set readings(value: Dictionary<string>) {
     this._readings = value;
   }
+  public icons: IconDefinition[] = [
+    faQuestionCircle,
+    faThermometerHalf,
+    faWater,
+    faDoorOpen,
+    faRss,
+    faMapMarkedAlt,
+  ];
 
   public defaultIcon = faQuestionCircle;
-  public temperatureIcon = faThermometerHalf;
-  public humidityIcon = faWater;
-  public dooropenIcon = faDoorOpen;
-  public rssIcon = faRss;
-  public locationIcon = faMapMarkedAlt;
 
   ngOnInit(): void {
-    const dictInit = [];
+    this._readings = new Dictionary<string>();
     for (const [key, value] of Object.entries(this.node.latestReading.values)) {
-      dictInit.push({ key: key, value: value });
+      this._readings.add(key, value as string);
     }
-    this._readings = new Dictionary(dictInit);
   }
 
   public getIcon(key: string): IconDefinition {
-    const definition = this.node.readingDefinitions.filter((def) => {
+    const definition = this.node.readingDefinitions?.filter((def) => {
       return def.name === key;
     })[0];
-    switch (ReadingIconsEnum[definition.icon]) {
-      case ReadingIconsEnum.Temperature:
-        return this.temperatureIcon;
-      case ReadingIconsEnum.Humidity:
-        return this.humidityIcon;
-      case ReadingIconsEnum.OpenClose:
-        return this.dooropenIcon;
-      default:
-        return this.defaultIcon;
+    if (definition !== undefined) {
+      return this.icons.filter(
+        (icon: IconDefinition) => icon.iconName.toString() === definition.icon,
+      )[0];
     }
+    return this.defaultIcon;
   }
 
   public getTypeAsString(value: Record<string, unknown>): string {
     for (const key in value) {
       if (value.hasOwnProperty(key)) {
         const object = Object.keys(value)[0];
-        console.log('Property name: ', object);
         return object;
       }
     }

@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { ConfigurationModule } from './configurations/configuration.module';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { RoomsightModule } from './roomsight/roomsight.module';
-import { getBaseUrl } from 'src/main';
 import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
@@ -19,7 +18,7 @@ import { SharedModule } from '@shared/shared.module';
     BrowserModule,
     HttpClientModule,
   ],
-  providers: [{ provide: 'BASE_URL', useFactory: getBaseUrl }],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

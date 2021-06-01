@@ -10,8 +10,6 @@ if (environment.production) {
 export function getBaseUrl(): string {
   let baseUrl = document.getElementsByTagName('base')[0].href;
 
-  console.log('BaseUrl: ', baseUrl);
-
   if (environment.local) {
     baseUrl = 'http://localhost:3000';
   }
@@ -19,6 +17,8 @@ export function getBaseUrl(): string {
   return baseUrl;
 }
 
-platformBrowserDynamic()
+const providers = [{ provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }];
+
+platformBrowserDynamic(providers)
   .bootstrapModule(AppModule)
   .catch((err) => console.error(err));

@@ -10,10 +10,25 @@ import { Observable } from 'rxjs';
 })
 export class ContainerComponent implements OnInit {
   public nodes: Observable<NodeDevice[]> = null;
+  public selectedNode: NodeDevice;
+  public showDefinitionsModal = false;
 
   constructor(private nodeService: NodeService) {}
 
   ngOnInit(): void {
     this.nodes = this.nodeService.getAllNodes();
+  }
+
+  public nodeSelected(node: NodeDevice): void {
+    const sub = this.nodeService
+      .getSingleNode(node.clientId)
+      .subscribe((node: NodeDevice) => {
+        this.selectedNode = node;
+        sub.unsubscribe();
+      });
+  }
+
+  public toogleDefinitionsModal(): void {
+    this.showDefinitionsModal = !this.showDefinitionsModal;
   }
 }

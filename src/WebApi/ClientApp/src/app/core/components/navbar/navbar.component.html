@@ -17,15 +17,19 @@
   </div>
   <div id="navbarMain" class="navbar-menu" [class.is-active]="this.menuIsOpen">
     <div class="navbar-start">
-      <a class="navbar-item" [routerLink]="['']">Nodes</a>
+      <a class="navbar-item" [routerLink]="['nodes']">Nodes</a>
+      <a class="navbar-item" [routerLink]="['roomsight']">RoomSight</a>
+      <a class="navbar-item" [routerLink]="['nodes/configurations']"
+        >Configure</a
+      >
     </div>
     <div
       [class.is-active]="this.configIsOpen ? true : undefined"
       class="navbar-item has-dropdown is-hoverable"
     >
-      <a class="navbar-link" (click)="configToogle()">Node Config</a>
+      <a class="navbar-link" (click)="configToogle()">Settings</a>
       <div class="navbar-dropdown">
-        <a class="navbar-item" [routerLink]="['/configurations']">Settings</a>
+        <a href="#" class="navbar-item">Server Config</a>
         <a href="#" class="navbar-item">Notifications</a>
         <a href="#" class="navbar-item">About</a>
       </div>

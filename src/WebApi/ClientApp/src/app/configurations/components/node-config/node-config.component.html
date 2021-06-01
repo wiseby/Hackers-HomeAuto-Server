@@ -1,0 +1,53 @@
+<ng-container *ngIf="!this.isLoading; else loadingSpinner">
+  <div
+    class="columns"
+    *ngIf="this.selectedNode !== undefined; else selectANode"
+  >
+    <div class="column is-3">
+      <app-node-card
+        [showDetails]="false"
+        [node]="this.selectedNode"
+      ></app-node-card>
+    </div>
+    <div class="column is-6">
+      <div class="box" *ngFor="let definition of this.getDefinitions()">
+        <definitions-form [definition]="definition"></definitions-form>
+      </div>
+      <div class="columns">
+        <div class="column is-12">
+          <button
+            class="button is-fullwidth is-primary is-medium"
+            (click)="this.onSave()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #selectANode>
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <article class="message is-info has-background-white">
+        <div class="message-header">
+          <p>Node not found</p>
+        </div>
+        <div class="message-body">
+          Something went wrong. Return to
+          <a [routerLink]="['/nodes/configurations']">configuration overview</a>
+          and try again.
+        </div>
+      </article>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingSpinner>
+  <div class="columns is-centered is-vcentered" style="height: 200px">
+    <div class="column is-half">
+      <progress class="progress is-large is-info" max="100">60%</progress>
+    </div>
+  </div>
+</ng-template>

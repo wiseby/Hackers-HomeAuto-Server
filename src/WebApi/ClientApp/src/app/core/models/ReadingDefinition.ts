@@ -1,5 +1,5 @@
 export class ReadingDefinition {
   name: string;
-  dataType: string;
+  unit: string;
   icon: string;
 }

@@ -1,13 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NodeDevice } from '@core/models/NodeDevice';
-import { NodeService } from '@core/services/node.service';
+import { Reading } from '@core/models/Reading';
 import * as Chart from 'chart.js';
 import {
   ChartConfiguration,
@@ -16,13 +9,13 @@ import {
   ChartType,
 } from 'chart.js';
 
-@Component({
-  selector: 'node-statistics',
-  templateUrl: './node-statistics.component.html',
-  styleUrls: ['./node-statistics.component.sass'],
+@Injectable({
+  providedIn: 'root',
 })
-export class NodeStatisticsComponent implements OnInit, AfterViewInit {
-  @Input() public node: NodeDevice;
+export class StatisticsService {
+  private lineChartLegend = true;
+  private lineChartType: ChartType = 'line';
+  public lineChartLabels = [];
 
   public get chartConf(): ChartConfiguration {
     const conf: ChartConfiguration = {
@@ -38,12 +31,9 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
     labels: [],
   };
 
-  public lineChartLabels = [];
-
   public lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
       xAxes: [
         {
           id: 'dates',
@@ -62,13 +52,45 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
     },
   };
 
-  public lineChartLegend = true;
-  public lineChartType: ChartType = 'line';
+  public buildTempChart(node: NodeDevice, readings?: Reading[]): ChartData {
+    const tempData = [];
+    const humData = [];
+    const labels = [];
+    let sortedReadings = [];
+    if (readings !== undefined) {
+      sortedReadings = readings.sort((a, b) =>
+        a.createdAt < b.createdAt ? 1 : 0,
+      );
+    } else {
+      sortedReadings = node.readings.sort((a, b) =>
+        a.createdAt < b.createdAt ? 1 : 0,
+      );
+    }
 
-  @ViewChild('temperatureChart') temperatureChart: ElementRef;
-  @ViewChild('humidityChart') humidityChart: ElementRef;
-
-  constructor(private nodeService: NodeService) {}
+    sortedReadings.forEach((reading) => {
+      tempData.push(reading.values.temperature);
+      humData.push(reading.values.humidity);
+      labels.push(this.getFormatedDate(reading.createdAt.toString()));
+    });
+    this.chartData.datasets = [];
+    this.chartData.datasets.push({
+      data: tempData,
+      label: node.clientId + ' - Temperature',
+      yAxisID: 'temperatureValues',
+      xAxisID: 'dates',
+      borderColor: '#ff6161',
+    });
+    this.chartData.datasets.push({
+      data: humData,
+      label: node.clientId + ' - Humidity',
+      yAxisID: 'humidityValues',
+      xAxisID: 'dates',
+      borderColor: '#7361ff',
+    });
+    this.chartData.labels = labels;
+    console.log(this.chartConf);
+    return this.chartConf.data;
+  }
 
   private getFormatedDate(value: string): string {
     const date = new Date(value);
@@ -76,43 +98,5 @@ export class NodeStatisticsComponent implements OnInit, AfterViewInit {
       date.getMonth() + 1
     }-${date.getDate()}`;
     return formatedDate;
-  }
-
-  private buildTempChart(): void {
-    const tempData = [];
-    const humData = [];
-    const labels = [];
-    const sortedReadings = this.node.readings.sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : 0,
-    );
-
-    sortedReadings.forEach((reading) => {
-      tempData.push(reading.values.temperature);
-      humData.push(reading.values.humidity);
-      labels.push(this.getFormatedDate(reading.createdAt.toString()));
-    });
-    this.chartData.datasets.push({
-      data: tempData,
-      label: this.node.clientId + ' - Temperature',
-      yAxisID: 'temperatureValues',
-      xAxisID: 'dates',
-      borderColor: '#ff6161',
-    });
-    this.chartData.datasets.push({
-      data: humData,
-      label: this.node.clientId + ' - Humidity',
-      yAxisID: 'humidityValues',
-      xAxisID: 'dates',
-      borderColor: '#7361ff',
-    });
-    this.chartData.labels = labels;
-  }
-
-  ngOnInit(): void {
-    this.buildTempChart();
-  }
-
-  ngAfterViewInit(): void {
-    new Chart(this.temperatureChart.nativeElement, this.chartConf);
   }
 }

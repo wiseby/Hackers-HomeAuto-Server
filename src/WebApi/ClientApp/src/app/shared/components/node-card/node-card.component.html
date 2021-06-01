@@ -22,13 +22,13 @@
   <div class="card-footer">
     <a
       *ngIf="this.showDetails"
-      [routerLink]="['/nodes', this.node.clientId]"
+      (click)="this.detailsClicked.emit(this.node)"
       class="card-footer-item has-background-info has-text-white"
       >Details</a
     >
     <a
       *ngIf="this.showConfigure"
-      [routerLink]="['/nodes', this.node.clientId, 'configure']"
+      (click)="this.configureClicked.emit(this.node)"
       class="card-footer-item has-background-info-light has-text-black"
       >Configure</a
     >

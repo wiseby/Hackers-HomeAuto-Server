@@ -17,13 +17,15 @@ I'm also trying to make this project as a base template, implementing best pract
 
 ASP.NET Webapi with Angular Client application at it's root.
 
-Mediator pattern with [MediatR](https://github.com/alsami/MediatR.Extensions.Autofac.DependencyInjection)
-
 ### MQTT Broker
 
 For connecting IoT devices that uses MQTT for topic publishing.
 
 [MQTTnet](https://github.com/chkr1011/MQTTnet) as a Broker/Server to manage IoT devices.
+
+### MongoDB
+
+Both Api and Mqtt Broker uses data persistance in form of a MongoDB instance. For development purposes this is running in a container with docker. This is easily configured in appsettings for each project.
 
 ---
 
@@ -33,6 +35,8 @@ Install [.Net SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) or late
 
 Install [Docker Engine for Ubuntu/Debian](https://docs.docker.com/engine/install/debian/), [Docker for Windows](https://docs.docker.com/docker-for-windows/install/) or [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
 This is to run the MongoDB in docker container. The hole environment should have a dev-environment in docker in the future.
+
+There is also a administration interface running with the container accessible on [localhost:8081](http://localhost:8081). Mongo Express comes in handy when you need to examine data during development.
 
 To start the MongoDB container, while standing in the root directory (where the docker-compose.yml is located) run the following command:
 
@@ -65,6 +69,7 @@ dotnet run --project src/MqttServer/
 The MQTT Server uses [MQTTNet](https://github.com/chkr1011/MQTTnet/blob/master/README.md).
 
 Accessing WebApp at WebApi root on https://localhost:5001/
+Accessing Swagger WebApi docs at https://localhost:5001/swagger
 
 ---
 
@@ -85,4 +90,4 @@ The client application is a Angular project in /src/WebApi/ClientApp. Further in
 
 Fork and build your custom tailored system by using this repo as a template to get started!
 
-You think there is something missing? For more generic improvments/features it is encouraged to contribute according to the guidelines that should be written soon ;) Check the [Project](https://github.com/wiseby/Hackers-HomeAuto.Server/projects) section for work in progress or start a new issue if it's missing.
+You think there is something missing? For more generic improvements/features it is encouraged to contribute according to the guidelines that should be written soon ;) Check the [Project](https://github.com/wiseby/Hackers-HomeAuto.Server/projects) section for work in progress or start a new issue if it's missing.

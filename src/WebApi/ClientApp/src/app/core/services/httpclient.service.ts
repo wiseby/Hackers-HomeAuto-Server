@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { JsonPatch } from '@core/models/JsonPatch';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -28,5 +29,19 @@ export class HttpclientService {
       : {};
 
     return this.http.get<T>(`${this.baseVersionUrl}/${resource}`, options);
+  }
+
+  public update<T>(resource: string, data: T): Observable<JsonPatch<T>> {
+    const options = {
+      headers: this.httpOptions.header,
+    };
+
+    const body = new JsonPatch<T>(data);
+
+    return this.http.patch<JsonPatch<T>>(
+      `${this.baseVersionUrl}/${resource}`,
+      body,
+      options,
+    );
   }
 }
