@@ -1,27 +1,31 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-interface IDictionary {
-  add(key: string, value: any): void;
+interface IDictionary<T> {
+  add(key: string, value: T): void;
   remove(key: string): void;
   containsKey(key: string): boolean;
   keys(): string[];
-  values(): any[];
+  values(): T[];
+  length: number;
 }
 
-export class Dictionary {
+export class Dictionary<T> implements IDictionary<T> {
   _keys: string[] = [];
-  _values: any[] = [];
+  _values: T[] = [];
 
-  constructor(init: { key: string; value: any }[]) {
-    for (let x = 0; x < init.length; x++) {
-      this[init[x].key] = init[x].value;
-      this._keys.push(init[x].key);
-      this._values.push(init[x].value);
+  constructor();
+  constructor(init?: IDictionary<T>) {
+    if (init !== undefined) {
+      for (let x = 0; x < init.length; x++) {
+        this[init[x].key] = init[x].value;
+        this._keys.push(init[x].key);
+        this._values.push(init[x].value);
+      }
     }
   }
 
-  public add(key: string, value: any): void {
+  public add(key: string, value: T): void {
     this[key] = value;
     this._keys.push(key);
     this._values.push(value);
@@ -39,7 +43,7 @@ export class Dictionary {
     return this._keys;
   }
 
-  public values(): any[] {
+  public values(): T[] {
     return this._values;
   }
 
@@ -47,11 +51,14 @@ export class Dictionary {
     if (typeof this[key] === 'undefined') {
       return false;
     }
-
     return true;
   }
 
-  public toLookup(): IDictionary {
+  public get length(): number {
+    return this._keys.length;
+  }
+
+  public toLookup(): IDictionary<T> {
     return this;
   }
 }

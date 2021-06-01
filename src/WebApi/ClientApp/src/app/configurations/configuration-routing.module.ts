@@ -1,17 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { NodeConfigSelectionComponent } from './components/node-config-selection/node-config-selection.component';
+import { NodeConfigComponent } from './components/node-config/node-config.component';
 import { ContainerComponent } from './container/container.component';
-import { NodeDetailsComponent } from './components/node-details/node-details.component';
 
 const routes: Routes = [
   {
-    path: 'configurations',
+    path: 'nodes/configurations',
     component: ContainerComponent,
     children: [
       {
-        path: ':guid',
-        component: NodeDetailsComponent,
+        path: '',
+        component: NodeConfigSelectionComponent,
+      },
+      {
+        path: ':clientId',
+        component: NodeConfigComponent,
       },
     ],
   },

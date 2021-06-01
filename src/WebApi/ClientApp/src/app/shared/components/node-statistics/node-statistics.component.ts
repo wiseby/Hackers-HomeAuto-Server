@@ -8,125 +8,51 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NodeDevice } from '@core/models/NodeDevice';
+import { Reading } from '@core/models/Reading';
 import { NodeService } from '@core/services/node.service';
+import { StatisticsService } from '@core/services/statistics.service';
 import * as Chart from 'chart.js';
-import {
-  ChartConfiguration,
-  ChartData,
-  ChartOptions,
-  ChartType,
-} from 'chart.js';
 
 @Component({
   selector: 'node-statistics',
   templateUrl: './node-statistics.component.html',
   styleUrls: ['./node-statistics.component.sass'],
 })
-export class NodeStatisticsComponent
-  implements OnInit, OnChanges, AfterViewInit {
+export class NodeStatisticsComponent implements OnInit, OnChanges {
   @Input() public node: NodeDevice;
+  public chartRef: Chart;
 
-  private chartRef: Chart;
-
-  public get chartConf(): ChartConfiguration {
-    const conf: ChartConfiguration = {
-      type: this.lineChartType,
-      data: this.chartData,
-      options: this.lineChartOptions,
-    };
-    return conf;
-  }
-
-  public chartData: ChartData = {
-    datasets: [],
-    labels: [],
-  };
-
-  public lineChartLabels = [];
-
-  public lineChartOptions: ChartOptions = {
-    responsive: true,
-    scales: {
-      xAxes: [
-        {
-          id: 'dates',
-        },
-      ],
-      yAxes: [
-        {
-          id: 'temperatureValues',
-          position: 'left',
-        },
-        {
-          id: 'humidityValues',
-          position: 'right',
-        },
-      ],
-    },
-  };
-
-  public lineChartLegend = true;
-  public lineChartType: ChartType = 'line';
-
+  private readings: Reading[];
   @ViewChild('temperatureChart') temperatureChart: ElementRef;
-  @ViewChild('canvasColumn') canvasColumn: ElementRef;
 
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    private statisticsService: StatisticsService,
+  ) {}
 
-  private getFormatedDate(value: string): string {
-    const date = new Date(value);
-    const formatedDate = `${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()}`;
-    return formatedDate;
-  }
-
-  private buildTempChart(): void {
-    const tempData = [];
-    const humData = [];
-    const labels = [];
-    const sortedReadings = this.node.readings.sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : 0,
-    );
-
-    sortedReadings.forEach((reading) => {
-      tempData.push(reading.values.temperature);
-      humData.push(reading.values.humidity);
-      labels.push(this.getFormatedDate(reading.createdAt.toString()));
-    });
-    this.chartData.datasets = [];
-    this.chartData.datasets.push({
-      data: tempData,
-      label: this.node.clientId + ' - Temperature',
-      yAxisID: 'temperatureValues',
-      xAxisID: 'dates',
-      borderColor: '#ff6161',
-    });
-    this.chartData.datasets.push({
-      data: humData,
-      label: this.node.clientId + ' - Humidity',
-      yAxisID: 'humidityValues',
-      xAxisID: 'dates',
-      borderColor: '#7361ff',
-    });
-    this.chartData.labels = labels;
+  private updateReadings(): void {
+    this.nodeService
+      .getReadings(this.node.clientId)
+      .subscribe((readings: Reading[]) => {
+        this.readings = readings;
+        console.log(readings);
+        this.statisticsService.buildTempChart(this.node, readings);
+        if (this.chartRef === undefined) {
+          this.chartRef = new Chart(
+            this.temperatureChart.nativeElement,
+            this.statisticsService.chartConf,
+          );
+        } else {
+          this.chartRef.update();
+        }
+      });
   }
 
   ngOnInit(): void {
-    this.buildTempChart();
+    this.updateReadings();
   }
 
   ngOnChanges(): void {
-    this.buildTempChart();
-    if (this.temperatureChart !== undefined) {
-      this.chartRef.update();
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.chartRef = new Chart(
-      this.temperatureChart.nativeElement,
-      this.chartConf,
-    );
+    this.updateReadings();
   }
 }

@@ -1,0 +1,36 @@
+<div class="columns pt-2">
+  <div class="column is-half">
+    <h1 class="title">{{ this.definition.name | titlecase }}</h1>
+    <label class="label" [attr.for]="this.definition.name + 'Unit'">{{
+      'Unit'
+    }}</label>
+
+    <input
+      class="input"
+      [id]="this.definition.name + 'DataType'"
+      [(ngModel)]="this.definition.unit"
+      #dataType="ngModel"
+      required
+    />
+
+    <div class="errorMessage" *ngIf="!dataType.valid && dataType.touched">
+      DataType is required
+    </div>
+  </div>
+</div>
+
+<div class="columns is-mobile">
+  <div class="column is-multiline" *ngFor="let icon of this.icons">
+    <label [attr.for]="this.definition.name + icon.iconName" class="radio p-2"
+      ><fa-icon [icon]="icon"></fa-icon
+    ></label>
+    <input
+      [id]="this.definition.name + icon.iconName"
+      type="radio"
+      (change)="this.iconChanged(icon)"
+      [value]="icon.iconName"
+      name="{{ this.definition.name + 'icon' }}"
+      [attr.checked]="definition.icon === icon.iconName ? true : undefined"
+    />
+  </div>
+</div>
