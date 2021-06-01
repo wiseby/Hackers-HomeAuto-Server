@@ -42,6 +42,7 @@ namespace Application.Services
             var node = await this.nodeRepository.ReadById(clientId, cancellationToken);
             node.LatestReading = await this.readingRepository.GetLatestByClientId(clientId, cancellationToken);
             node.ReadingsAvailable = await this.readingRepository.GetReadingCount(clientId, cancellationToken);
+            node.ReadingDefinitions = await this.readingRepository.GetReadingDefinitionsByClientId(clientId, cancellationToken);
             return node;
         }
 
