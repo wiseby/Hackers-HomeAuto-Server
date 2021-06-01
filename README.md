@@ -54,6 +54,12 @@ Clone the repo:
 git clone https://github.com/wiseby/Hackers-HomeAuto.Server.git
 ```
 
+Build Solution:
+
+```sh
+dotnet build
+```
+
 Start WebApi:
 
 ```bash
@@ -63,12 +69,13 @@ dotnet run --project src/WebApi/
 Start MqttServer:
 
 ```bash
-dotnet run --project src/MqttServer/
+cd src/MqttServer && dotnet run
 ```
 
 The MQTT Server uses [MQTTNet](https://github.com/chkr1011/MQTTnet/blob/master/README.md).
 
 Accessing WebApp at WebApi root on https://localhost:5001/
+
 Accessing Swagger WebApi docs at https://localhost:5001/swagger
 
 ---
