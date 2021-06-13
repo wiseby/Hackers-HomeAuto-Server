@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["chart.js"],
             "outputPath": "dist/hackers-homeauto",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -29,6 +30,7 @@
           },
           "configurations": {
             "production": {
+              "tsConfig": "tsconfig.prod.app.json",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -56,6 +58,7 @@
               ]
             },
             "local": {
+              "tsConfig": "tsconfig.dev.app.json",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
